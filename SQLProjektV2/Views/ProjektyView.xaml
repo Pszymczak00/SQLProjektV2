@@ -80,8 +80,8 @@
                 </StackPanel>
 
                 <StackPanel Name="OptionChoose" Margin="20" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed">
-                    <Button Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" Margin="10" FontSize="20" Click="ModFormVisible" >Modyfikuj sprzęt</Button>
-                    <Button Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" Margin="10" FontSize="20" Click="DeleteRecord">Usuń sprzęt</Button>
+                    <Button Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" Margin="10" FontSize="20" Click="ModFormVisible" >Modyfikuj projekt</Button>
+                    <Button Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" Margin="10" FontSize="20" Click="DeleteRecord">Usuń projekt</Button>
                 </StackPanel>
 
                 <StackPanel Name="ModForm" Margin="10" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed" >
