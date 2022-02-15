@@ -58,6 +58,8 @@ namespace SQLProjektV2.Views
                 (e.Column as DataGridTextColumn).MaxWidth = 0;
         }
 
+
+
         private void AddFormVisible(object sender, RoutedEventArgs e)
         {
             OptionChoose.Visibility = Visibility.Collapsed;
@@ -80,6 +82,8 @@ namespace SQLProjektV2.Views
             MZSource.SelectedValue = temp.Rows[0][4];
 
         }
+
+
 
         private void AddNewRecord(object sender, RoutedEventArgs e)
         {
@@ -136,6 +140,7 @@ namespace SQLProjektV2.Views
                 DataContext = new WpisyPracyViewModel();
             }
         }
+
         private void DeleteRecord(object sender, RoutedEventArgs e)
         {
             string temp = $"DELETE FROM [dbo].[Wpisy_Pracy] WHERE Id = {selectedId}";

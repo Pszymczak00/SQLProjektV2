@@ -56,30 +56,7 @@ namespace SQLProjektV2.Views
                 (e.Column as DataGridTextColumn).MaxWidth = 0;
         }
 
-        private void AddNewRecord(object sender, RoutedEventArgs e)
-        {
-            string errorString = "";
 
-            if (TypSource.Text.Length == 0) errorString += "Podaj typ urządzenia\n";
-            if (NazwaSource.Text.Length == 0) errorString += "Podaj nazwe urządzenia\n";
-            string tempOpis = OpisSource.Text.Length != 0 ? $"'{OpisSource.Text}'" : "''";
-            if ((errorString.Length == 0) &&  DBConnection.SQLCommandRet($"select count(*) from [dbo].[Sprzęty] WHERE Typ = '{TypSource.Text}' AND Nazwa = '{NazwaSource.Text}' AND Opis = {tempOpis} AND Pracownicy_Id_Prac = '{((KeyValuePair<int, string>)PSource.SelectedItem).Key}'") > 0) errorString += "Już jest taki sprzęt\n";
-
-
-            if (errorString.Length != 0) MessageBox.Show(errorString);
-            else
-            {
-                string typ = TypSource.Text;
-                string nazwa = NazwaSource.Text;
-                string opis = OpisSource.Text;
-                string pracownik = ((KeyValuePair<int, string>)PSource.SelectedItem).Key.ToString();
-
-                string temp = $"INSERT INTO [dbo].[Sprzęty] VALUES ('{typ}', '{nazwa}', '{opis}', {pracownik})";
-                MessageBox.Show("Dodano informacje o nowym urządzeniu");
-                DBConnection.SQLCommand(temp);
-                DataContext = new SprzętyViewModel();
-            }
-        }
 
         private void AddFormVisible(object sender, RoutedEventArgs e)
         {
@@ -100,6 +77,33 @@ namespace SQLProjektV2.Views
             MNazwaSource.Text = temp.Rows[0][1].ToString();
             MOpisSource.Text = temp.Rows[0][2].ToString();
             MPSource.SelectedValue = temp.Rows[0][3];
+        }
+
+
+
+        private void AddNewRecord(object sender, RoutedEventArgs e)
+        {
+            string errorString = "";
+
+            if (TypSource.Text.Length == 0) errorString += "Podaj typ urządzenia\n";
+            if (NazwaSource.Text.Length == 0) errorString += "Podaj nazwe urządzenia\n";
+            string tempOpis = OpisSource.Text.Length != 0 ? $"'{OpisSource.Text}'" : "''";
+            if ((errorString.Length == 0) && DBConnection.SQLCommandRet($"select count(*) from [dbo].[Sprzęty] WHERE Typ = '{TypSource.Text}' AND Nazwa = '{NazwaSource.Text}' AND Opis = {tempOpis} AND Pracownicy_Id_Prac = '{((KeyValuePair<int, string>)PSource.SelectedItem).Key}'") > 0) errorString += "Już jest taki sprzęt\n";
+
+
+            if (errorString.Length != 0) MessageBox.Show(errorString);
+            else
+            {
+                string typ = TypSource.Text;
+                string nazwa = NazwaSource.Text;
+                string opis = OpisSource.Text;
+                string pracownik = ((KeyValuePair<int, string>)PSource.SelectedItem).Key.ToString();
+
+                string temp = $"INSERT INTO [dbo].[Sprzęty] VALUES ('{typ}', '{nazwa}', '{opis}', {pracownik})";
+                MessageBox.Show("Dodano informacje o nowym urządzeniu");
+                DBConnection.SQLCommand(temp);
+                DataContext = new SprzętyViewModel();
+            }
         }
 
         private void UpdateRecord(object sender, RoutedEventArgs e)
@@ -128,6 +132,7 @@ namespace SQLProjektV2.Views
               
             }
         }
+
         private void DeleteRecord(object sender, RoutedEventArgs e)
         {
             string temp = $"DELETE FROM [dbo].[Sprzęty] WHERE Id = {selectedId}";

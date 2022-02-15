@@ -59,6 +59,8 @@ namespace SQLProjektV2.Views
                 (e.Column as DataGridTextColumn).Binding.StringFormat = "MM/yyyy";
         }
 
+
+
         private void AddFormVisible(object sender, RoutedEventArgs e)
         {
             OptionChoose.Visibility = Visibility.Collapsed;
@@ -78,6 +80,8 @@ namespace SQLProjektV2.Views
             MDatePicker1.SelectedDate = ((DateTime)temp.Rows[0][1]);
             MGodzinySource.Text = temp.Rows[0][2].ToString();
         }
+
+
 
         private void AddNewRecord(object sender, RoutedEventArgs e)
         {
@@ -142,6 +146,7 @@ namespace SQLProjektV2.Views
                 DataContext = new GodzinyPracyViewModel();
             }
         }
+
         private void DeleteRecord(object sender, RoutedEventArgs e)
         {
             string temp = $"DELETE FROM [dbo].[Godziny_pracy] WHERE Id = {selectedId}";

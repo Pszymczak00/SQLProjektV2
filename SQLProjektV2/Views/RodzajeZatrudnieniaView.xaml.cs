@@ -56,12 +56,7 @@ namespace SQLProjektV2.Views
                 (e.Column as DataGridTextColumn).MaxWidth = 0;
         }
 
-        private void AddFormVisible(object sender, RoutedEventArgs e)
-        {
-            OptionChoose.Visibility = Visibility.Collapsed;
-            AddForm.Visibility = Visibility.Visible;
-            ModForm.Visibility = Visibility.Collapsed;
-        }
+
 
         private void AddNewRecord(object sender, RoutedEventArgs e)
         {
@@ -100,6 +95,15 @@ namespace SQLProjektV2.Views
             MNazwaSource.Text = temp.Rows[0][0].ToString();
             MMinSource.Text = temp.Rows[0][1].ToString();
             MMaxSource.Text = temp.Rows[0][2].ToString();
+        }
+
+
+
+        private void AddFormVisible(object sender, RoutedEventArgs e)
+        {
+            OptionChoose.Visibility = Visibility.Collapsed;
+            AddForm.Visibility = Visibility.Visible;
+            ModForm.Visibility = Visibility.Collapsed;
         }
 
         private void UpdateRecord(object sender, RoutedEventArgs e)

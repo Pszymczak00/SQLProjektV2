@@ -59,6 +59,31 @@ namespace SQLProjektV2.Views
                 (e.Column as DataGridTextColumn).Binding.StringFormat = "dd/MM/yyyy";
         }
 
+
+
+        private void AddFormVisible(object sender, RoutedEventArgs e)
+        {
+            OptionChoose.Visibility = Visibility.Collapsed;
+            AddForm.Visibility = Visibility.Visible;
+            ModForm.Visibility = Visibility.Collapsed;
+        }
+
+        private void ModFormVisible(object sender, RoutedEventArgs e)
+        {
+            AddForm.Visibility = Visibility.Collapsed;
+            OptionChoose.Visibility = Visibility.Collapsed;
+            ModForm.Visibility = Visibility.Visible;
+
+            DataTable temp = DBConnection.BasicId("[dbo].[ProcSelectIdProjekty]", int.Parse(selectedId));
+
+            MDatePicker1.SelectedDate = ((DateTime)temp.Rows[0][0]);
+            MOpisSource.Text = temp.Rows[0][1].ToString();
+            MKSource.SelectedValue = temp.Rows[0][2];
+            MZSource.SelectedValue = temp.Rows[0][3];
+        }
+
+
+
         private void AddNewRecord(object sender, RoutedEventArgs e)
         {
             string errorString = "";
@@ -80,27 +105,6 @@ namespace SQLProjektV2.Views
                 DBConnection.SQLCommand(temp);
                 DataContext = new ProjektyViewModel();
             }
-        }
-
-        private void AddFormVisible(object sender, RoutedEventArgs e)
-        {
-            OptionChoose.Visibility = Visibility.Collapsed;
-            AddForm.Visibility = Visibility.Visible;
-            ModForm.Visibility = Visibility.Collapsed;
-        }
-
-        private void ModFormVisible(object sender, RoutedEventArgs e)
-        {
-            AddForm.Visibility = Visibility.Collapsed;
-            OptionChoose.Visibility = Visibility.Collapsed;
-            ModForm.Visibility = Visibility.Visible;
-
-            DataTable temp = DBConnection.BasicId("[dbo].[ProcSelectIdProjekty]", int.Parse(selectedId));
-
-            MDatePicker1.SelectedDate = ((DateTime)temp.Rows[0][0]);
-            MOpisSource.Text = temp.Rows[0][1].ToString();
-            MKSource.SelectedValue = temp.Rows[0][2];
-            MZSource.SelectedValue = temp.Rows[0][3];
         }
 
         private void UpdateRecord(object sender, RoutedEventArgs e)
@@ -126,6 +130,7 @@ namespace SQLProjektV2.Views
                 DataContext = new ProjektyViewModel();
             }
         }
+
         private void DeleteRecord(object sender, RoutedEventArgs e)
         {
             string temp = $"DELETE FROM [dbo].[Projekty] WHERE Id = {selectedId}";

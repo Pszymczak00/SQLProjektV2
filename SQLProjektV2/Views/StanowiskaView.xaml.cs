@@ -57,6 +57,8 @@ namespace SQLProjektV2.Views
                 (e.Column as DataGridTextColumn).MaxWidth = 0;
         }
 
+
+
         private void AddFormVisible(object sender, RoutedEventArgs e)
         {
             OptionChoose.Visibility = Visibility.Collapsed;
@@ -76,6 +78,8 @@ namespace SQLProjektV2.Views
             MStazSource.Text = temp.Rows[0][1].ToString();
             MStawkaSource.Text = temp.Rows[0][2].ToString();
         }
+
+
 
         private void AddNewRecord(object sender, RoutedEventArgs e)
         {

@@ -56,6 +56,8 @@ namespace SQLProjektV2.Views
                 (e.Column as DataGridTextColumn).MaxWidth = 0;
         }
 
+
+
         private void AddFormVisible(object sender, RoutedEventArgs e)
         {
             OptionChoose.Visibility = Visibility.Collapsed;
@@ -74,6 +76,8 @@ namespace SQLProjektV2.Views
             MAdresSource.Text = temp.Rows[0][0].ToString();
             MNumerSource.Text = temp.Rows[0][1].ToString();
         }
+
+
 
         private void AddNewRecord(object sender, RoutedEventArgs e)
         {
@@ -117,9 +121,6 @@ namespace SQLProjektV2.Views
                     DataContext = new MiejscaViewModel();
                 }
             }
-
-
-
 
         }
 

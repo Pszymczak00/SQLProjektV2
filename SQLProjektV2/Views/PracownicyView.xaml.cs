@@ -62,6 +62,8 @@ namespace SQLProjektV2.Views
                 (e.Column as DataGridTextColumn).MaxWidth = 0;
         }
 
+
+
         private void AddNewRecord(object sender, RoutedEventArgs e)
         {
             string errorString = "";
@@ -132,6 +134,8 @@ namespace SQLProjektV2.Views
                 DataContext = new PracownicyViewModel();
             }
         }
+
+
 
         private void AddFormVisible(object sender, RoutedEventArgs e)
         {

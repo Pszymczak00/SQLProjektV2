@@ -56,6 +56,32 @@ namespace SQLProjektV2.Views
                 (e.Column as DataGridTextColumn).MaxWidth = 0;
         }
 
+
+
+        private void AddFormVisible(object sender, RoutedEventArgs e)
+        {
+            OptionChoose.Visibility = Visibility.Collapsed;
+            AddForm.Visibility = Visibility.Visible;
+            ModForm.Visibility = Visibility.Collapsed;
+        }
+
+        private void ModFormVisible(object sender, RoutedEventArgs e)
+        {
+            AddForm.Visibility = Visibility.Collapsed;
+            OptionChoose.Visibility = Visibility.Collapsed;
+            ModForm.Visibility = Visibility.Visible;
+
+            DataTable temp = DBConnection.BasicId("[dbo].[ProcSelectIdZespoły]", int.Parse(selectedId));
+
+            MNazwaSource.Text = temp.Rows[0][0].ToString();
+            if (temp.Rows[0][1].ToString() == "")
+                MPSource.SelectedValue = -1;
+            else
+                MPSource.SelectedValue = temp.Rows[0][1];
+        }
+
+
+
         private void AddNewRecord(object sender, RoutedEventArgs e)
         {
             string errorString = "";
@@ -80,45 +106,6 @@ namespace SQLProjektV2.Views
                 DBConnection.SQLCommand(temp);
                 DataContext = new ZespołyViewModel();
             }
-        }
-
-        private void AddFormVisible(object sender, RoutedEventArgs e)
-        {
-            OptionChoose.Visibility = Visibility.Collapsed;
-            AddForm.Visibility = Visibility.Visible;
-            ModForm.Visibility = Visibility.Collapsed;
-        }
-
-        private void ModFormVisible(object sender, RoutedEventArgs e)
-        {
-            AddForm.Visibility = Visibility.Collapsed;
-            OptionChoose.Visibility = Visibility.Collapsed;
-            ModForm.Visibility = Visibility.Visible;
-
-            DataTable temp = DBConnection.BasicId("[dbo].[ProcSelectIdZespoły]", int.Parse(selectedId));
-
-            MNazwaSource.Text = temp.Rows[0][0].ToString();
-            if (temp.Rows[0][1].ToString() == "")
-                MPSource.SelectedValue = -1;
-            else
-                MPSource.SelectedValue = temp.Rows[0][1];
-        }
-    
-        private void DeleteRecord(object sender, RoutedEventArgs e)
-        {
-            string temp = $"DELETE FROM [dbo].[zespoły] WHERE Id = {selectedId}";
-            try
-            {
-                DBConnection.SQLCommand(temp);
-                MessageBox.Show("Usunięto zespół");
-                DataContext = new ZespołyViewModel();
-                OptionChoose.Visibility = Visibility.Collapsed;
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Nie usunięto zespołu, ponieważ jest związany z innymi tablicami");
-            }
-
         }
 
         private void UpdateRecord(object sender, RoutedEventArgs e)
@@ -146,5 +133,23 @@ namespace SQLProjektV2.Views
                 DataContext = new ZespołyViewModel();
             }
         }
+
+        private void DeleteRecord(object sender, RoutedEventArgs e)
+        {
+            string temp = $"DELETE FROM [dbo].[zespoły] WHERE Id = {selectedId}";
+            try
+            {
+                DBConnection.SQLCommand(temp);
+                MessageBox.Show("Usunięto zespół");
+                DataContext = new ZespołyViewModel();
+                OptionChoose.Visibility = Visibility.Collapsed;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Nie usunięto zespołu, ponieważ jest związany z innymi tablicami");
+            }
+
+        }
+
     }
 }
