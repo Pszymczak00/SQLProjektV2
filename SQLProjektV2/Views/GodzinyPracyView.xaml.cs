@@ -83,7 +83,13 @@ namespace SQLProjektV2.Views
         {
             string errorString = "";
             if (!DatePicker1.SelectedDate.HasValue) errorString += "Podaj miesiąc\n";
-            else if (DBConnection.SQLCommandRet($"select count(*) from [dbo].[Godziny_Pracy] WHERE Pracownicy_Id_Prac = '{((KeyValuePair<int, string>)PSource.SelectedItem).Key}' AND miesiąc = '{DatePicker1.SelectedDate.Value.ToString("yyyy - MM - dd")}'") > 0) errorString += "Już jest taki wpis pracy\n";
+            else
+            {
+                string year = DatePicker1.SelectedDate.Value.Year.ToString();
+                string month = DatePicker1.SelectedDate.Value.Month.ToString();
+                string date = $"{year}-{month}-01";
+                if (DBConnection.SQLCommandRet($"select count(*) from [dbo].[Godziny_Pracy] WHERE Pracownicy_Id_Prac = '{((KeyValuePair<int, string>)PSource.SelectedItem).Key}' AND miesiąc = '{DatePicker1.SelectedDate.Value.ToString(date)}'") > 0) errorString += "Już jest taki wpis pracy\n";
+            }
             if (GodzinySource.Text.Length == 0) errorString += "Podaj liczbę godzin\n";
             else if (!int.TryParse(GodzinySource.Text, out _)) errorString += "Liczba godzin musi być liczbą\n";
             else if (int.Parse(GodzinySource.Text) < 0) errorString += "Liczba godzin musi być większa lub równa 0\n";
@@ -92,10 +98,12 @@ namespace SQLProjektV2.Views
             else
             {
                 string prac = ((KeyValuePair<int, string>)PSource.SelectedItem).Key.ToString();
-                string miesiac = DatePicker1.SelectedDate.Value.ToString("yyyy-MM-dd");
                 string godziny = GodzinySource.Text;
+                string year = DatePicker1.SelectedDate.Value.Year.ToString();
+                string month = DatePicker1.SelectedDate.Value.Month.ToString();
+                string date = $"{year}-{month}-01";
 
-                string temp = $"insert into [dbo].[Godziny_Pracy] values ({prac}, '{miesiac}', {godziny})";
+                string temp = $"insert into [dbo].[Godziny_Pracy] values ({prac}, '{date}', {godziny})";
                 MessageBox.Show("Dodano nowe wpis deklaracji godzin pracy");
                 DBConnection.SQLCommand(temp);
                 DataContext = new GodzinyPracyViewModel();
@@ -106,7 +114,15 @@ namespace SQLProjektV2.Views
         {
             string errorString = "";
 
-            if (DBConnection.SQLCommandRet($"select count(*) from [dbo].[Godziny_Pracy] WHERE Pracownicy_Id_Prac = '{((KeyValuePair<int, string>)MPSource.SelectedItem).Key}' AND miesiąc = '{MDatePicker1.SelectedDate.Value.ToString("yyyy - MM - dd")}' AND Id != {selectedId}") > 0) errorString += "Już jest taki wpis pracy\n";
+            if (!MDatePicker1.SelectedDate.HasValue) errorString += "Podaj miesiąc\n";
+            else
+            {
+                string year = MDatePicker1.SelectedDate.Value.Year.ToString();
+                string month = MDatePicker1.SelectedDate.Value.Month.ToString();
+                string date = $"{year}-{month}-01";
+                if (DBConnection.SQLCommandRet($"select count(*) from [dbo].[Godziny_Pracy] WHERE Pracownicy_Id_Prac = '{((KeyValuePair<int, string>)MPSource.SelectedItem).Key}' AND miesiąc = '{MDatePicker1.SelectedDate.Value.ToString(date)}' AND Id != {selectedId}") > 0) errorString += "Już jest taki wpis pracy\n";
+            }
+
             if (MGodzinySource.Text.Length == 0) errorString += "Podaj liczbę godzin\n";
             else if (!int.TryParse(MGodzinySource.Text, out _)) errorString += "Liczba godzin musi być liczbą\n";
             else if (int.Parse(MGodzinySource.Text) < 0) errorString += "Liczba godzin musi być większa lub równa 0\n";
@@ -115,10 +131,12 @@ namespace SQLProjektV2.Views
             else
             {
                 string prac = ((KeyValuePair<int, string>)MPSource.SelectedItem).Key.ToString();
-                string miesiac = MDatePicker1.SelectedDate.Value.ToString("yyyy-MM-dd");
+                string year = MDatePicker1.SelectedDate.Value.Year.ToString();
+                string month = MDatePicker1.SelectedDate.Value.Month.ToString();
+                string date = $"{year}-{month}-01";
                 string godziny = MGodzinySource.Text;
 
-                string temp = $"UPDATE [dbo].[Godziny_Pracy] SET [Pracownicy_Id_prac] = {prac}, [Miesiąc] = '{miesiac}', [Zadeklarowane_godziny] = {godziny} WHERE Id = {selectedId}";
+                string temp = $"UPDATE [dbo].[Godziny_Pracy] SET [Pracownicy_Id_prac] = {prac}, [Miesiąc] = '{date}', [Zadeklarowane_godziny] = {godziny} WHERE Id = {selectedId}";
                 MessageBox.Show("Zaktualizowano wpis deklaracji godzin pracy");
                 DBConnection.SQLCommand(temp);
                 DataContext = new GodzinyPracyViewModel();
