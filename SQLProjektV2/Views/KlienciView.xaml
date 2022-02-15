@@ -79,7 +79,6 @@
                     </Grid>
                 </StackPanel>
 
-
                 <StackPanel Name="OptionChoose" Margin="20" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed">
                     <Button Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" Margin="10" FontSize="20" Click="ModFormVisible" >Modyfikuj wpis</Button>
                     <Button Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" Margin="10" FontSize="20" Click="DeleteRecord">Usuń wpis</Button>
@@ -112,8 +111,7 @@
                     </Grid>
                 </StackPanel>
 
-
-
+                
             </Grid>
         </Border>
     </Grid>
