@@ -83,9 +83,9 @@ namespace SQLProjektV2.Views
             { errorString += "Podaj adres\n"; MessageBox.Show(errorString); }
             else if (NumerSource.Text.Length != 0)
             {
-                if (!int.TryParse(NumerSource.Text, out _)) errorString += "Numer budynku musi być liczbą całkowitą\n";
-                else if (int.Parse(NumerSource.Text) < 1) errorString += "Numer budynku musi być wiekszy oo zera\n";
-                else if (DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Miejsca] WHERE Adres = '{AdresSource.Text}' AND Nr_pokoju = {NumerSource.Text}") > 0) errorString += "Ten nazwa jest już używana przez inny zespół\n";
+                if (!int.TryParse(NumerSource.Text, out _)) errorString += "Numer pokoju musi być liczbą całkowitą\n";
+                else if (int.Parse(NumerSource.Text) < 1) errorString += "Numer pokoju musi być wiekszy oo zera\n";
+                else if (DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Miejsca] WHERE Adres = '{AdresSource.Text}' AND Nr_pokoju = {NumerSource.Text}") > 0) errorString += "Ten adres jest już użyty\n";
 
                 if (errorString.Length != 0) MessageBox.Show(errorString);
                 else
@@ -102,7 +102,7 @@ namespace SQLProjektV2.Views
             }
             else
             {
-                if (DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Miejsca] WHERE Adres = '{AdresSource.Text}' AND Nr_pokoju IS NULL") > 0) errorString += "Ten nazwa jest już używana przez inny zespół\n";
+                if (DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Miejsca] WHERE Adres = '{AdresSource.Text}' AND Nr_pokoju IS NULL") > 0) errorString += "Ten adres jest już użyty\n";
 
                 if (errorString.Length != 0) MessageBox.Show(errorString);
                 else
@@ -132,9 +132,9 @@ namespace SQLProjektV2.Views
             { errorString += "Podaj adres\n"; MessageBox.Show(errorString); }
             else if (MNumerSource.Text.Length != 0)
             {
-                if (!int.TryParse(MNumerSource.Text, out _)) errorString += "Numer budynku musi być liczbą całkowitą\n";
-                else if (int.Parse(MNumerSource.Text) < 1) errorString += "Numer budynku musi być wiekszy oo zera\n";
-                else if (DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Miejsca] WHERE Adres = '{MAdresSource.Text}' AND Nr_pokoju = {MNumerSource.Text} AND Id != {selectedId}") > 0) errorString += "Ten nazwa jest już używana przez inny zespół\n";
+                if (!int.TryParse(MNumerSource.Text, out _)) errorString += "Numer pokoju musi być liczbą całkowitą\n";
+                else if (int.Parse(MNumerSource.Text) < 1) errorString += "Numer pokoju musi być wiekszy oo zera\n";
+                else if (DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Miejsca] WHERE Adres = '{MAdresSource.Text}' AND Nr_pokoju = {MNumerSource.Text} AND Id != {selectedId}") > 0) errorString += "Ten adres jest już użyty\n";
 
                 if (errorString.Length != 0) MessageBox.Show(errorString);
                 else
@@ -151,7 +151,7 @@ namespace SQLProjektV2.Views
             }
             else
             {
-                if (DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Miejsca] WHERE Adres = '{MAdresSource.Text}' AND Nr_pokoju IS NULL AND Id != {selectedId}") > 0) errorString += "Ten nazwa jest już używana przez inny zespół\n";
+                if (DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Miejsca] WHERE Adres = '{MAdresSource.Text}' AND Nr_pokoju IS NULL AND Id != {selectedId}") > 0) errorString += "Ten adres jest już użyty\n";
 
                 if (errorString.Length != 0) MessageBox.Show(errorString);
                 else
