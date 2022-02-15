@@ -84,9 +84,9 @@ namespace SQLProjektV2.Views
             if (DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[stanowiska] WHERE Nazwa = '{NazwaSource.Text}'") > 0) errorString += "Ten nazwa jest już używana przez inny zespół\n";
             if (NazwaSource.Text.Length == 0) errorString += "Podaj nazwę zespołu\n";
 
-            if (StazSource.Text.Length == 0) errorString += "Podaj stawkę godzinową\n";
-            else if (!int.TryParse(StazSource.Text, out _)) errorString += "Stawka godzinowa musi być liczbą całkowitą\n";
-            else if (int.Parse(StazSource.Text) < 0) errorString += "Stawka godzinowa musi być większa lub równy 0\n";
+            if (StazSource.Text.Length == 0) errorString += "Podaj wymaganą długość stażu\n";
+            else if (!int.TryParse(StazSource.Text, out _)) errorString += "Staż musi być liczbą całkowitą\n";
+            else if (int.Parse(StazSource.Text) < 0) errorString += "Staż musi być większy lub równy 0\n";
 
             if (StawkaSource.Text.Length == 0) errorString += "Podaj stawkę godzinową\n";
             else if (!int.TryParse(StawkaSource.Text, out _)) errorString += "Stawka godzinowa musi być liczbą całkowitą\n";
@@ -116,9 +116,9 @@ namespace SQLProjektV2.Views
             if (DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[stanowiska] WHERE Nazwa = '{NazwaSource.Text}' AND Id != {selectedId}") > 0) errorString += "Ten nazwa jest już używana przez inny zespół\n";
             if (MNazwaSource.Text.Length == 0) errorString += "Podaj nazwę zespołu\n";
 
-            if (MStazSource.Text.Length == 0) errorString += "Podaj stawkę godzinową\n";
-            else if (!int.TryParse(MStazSource.Text, out _)) errorString += "Stawka godzinowa musi być liczbą całkowitą\n";
-            else if (int.Parse(MStazSource.Text) < 0) errorString += "Stawka godzinowa musi być większa lub równy 0\n";
+            if (MStazSource.Text.Length == 0) errorString += "Podaj wymaganą długość stażu\n";
+            else if (!int.TryParse(MStazSource.Text, out _)) errorString += "Staż musi być liczbą całkowitą\n";
+            else if (int.Parse(MStazSource.Text) < 0) errorString += "Staż musi być większy lub równy 0\n";
 
             if (MStawkaSource.Text.Length == 0) errorString += "Podaj stawkę godzinową\n";
             else if (!int.TryParse(MStawkaSource.Text, out _)) errorString += "Stawka godzinowa musi być liczbą całkowitą\n";
