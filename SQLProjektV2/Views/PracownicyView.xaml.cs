@@ -73,7 +73,7 @@ namespace SQLProjektV2.Views
             if (NazwiskoSource.Text.Length == 0) errorString += "Podaj nazwisko pracownika\n";
             if (!DatePicker1.SelectedDate.HasValue) errorString += "Podaj datę zatrudnienia\n";
             if(!foo.IsValid(EmailSource.Text)) errorString += "Błędny format adresu email \n";
-            if (!NumerSource.Text.All(char.IsDigit)) errorString += "Pole numer zawiera niedozwolone znaki\n";
+            if (!NumerSource.Text.All(char.IsDigit)) errorString += "Numer może zawierać wyłącznie cyfry\n";
             if (DatePicker1.SelectedDate.HasValue && DatePicker2.SelectedDate.HasValue && DatePicker1.SelectedDate.Value > DatePicker2.SelectedDate.Value) errorString += "Data zwolnienia jest wcześniejsza niż data zatrudnienia. \n";
 
             string number = NumerSource.Text.Length > 0 ? $"'{NumerSource.Text}'" : "null";
@@ -104,7 +104,7 @@ namespace SQLProjektV2.Views
             if (!MDatePicker1.SelectedDate.HasValue) errorString += "Podaj datę zatrudnienia\n";
             
             if (!foo.IsValid(MEmailSource.Text)) errorString += "Błędny format adresu email \n";
-            if (!MNumerSource.Text.All(char.IsDigit)) errorString += "Pole numer zawiera niedozwolone znaki\n";
+            if (!MNumerSource.Text.All(char.IsDigit)) errorString += "Numer może zawierać wyłącznie cyfry\n";
             if (MDatePicker1.SelectedDate.HasValue && MDatePicker2.SelectedDate.HasValue && MDatePicker1.SelectedDate.Value > MDatePicker2.SelectedDate.Value) errorString += "Data zwolnienia jest wcześniejsza niż data zatrudnienia. \n";
 
             string number = MNumerSource.Text.Length > 0 ? $"'{MNumerSource.Text}'" : "null";
