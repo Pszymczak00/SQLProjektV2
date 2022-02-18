@@ -9,8 +9,8 @@ namespace SQLProjektV2.ViewModels
 {
     class MiejscaViewModel : ViewModelBase
     {
-        private DataTable mainTable = DBConnection.Basic($"[dbo].[ProcSelectMiejsca]");
-        public DataTable MainTable
+        private DataView mainTable = new DataView(DBConnection.Basic($"[dbo].[ProcSelectMiejsca]"));
+        public DataView MainTable
         {
             get => mainTable;
             set
@@ -19,5 +19,11 @@ namespace SQLProjektV2.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public Dictionary<string, string> FilterInfo { get; set; } = new Dictionary<string, string>
+        {
+            {"Adres", "String"},
+            {"Numer Pokoju", "Number"},
+        };
     }
 }

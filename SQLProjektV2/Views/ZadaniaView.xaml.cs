@@ -44,9 +44,18 @@ namespace SQLProjektV2.Views
             if (x != null)
             {
                 selectedId = x.Text;
-                OptionChoose.Visibility = Visibility.Visible;
                 AddForm.Visibility = Visibility.Collapsed;
-                ModForm.Visibility = Visibility.Collapsed;
+                Filters.Visibility = Visibility.Collapsed;
+                ModForm.Visibility = Visibility.Visible;
+
+                DataTable temp = DBConnection.BasicId("[dbo].[ProcSelectIdZadania]", int.Parse(selectedId));
+
+                MNazwaSource.Text = temp.Rows[0][0].ToString();
+                MUkonczoneSource.IsChecked = (bool)temp.Rows[0][1];
+                MCzasSource.Text = temp.Rows[0][2].ToString();
+                MOpisSource.Text = temp.Rows[0][3].ToString();
+                MPSource.SelectedValue = temp.Rows[0][4];
+                MPROJSource.SelectedValue = temp.Rows[0][5];
             }
         }
 
@@ -57,29 +66,20 @@ namespace SQLProjektV2.Views
         }
 
 
-
         private void AddFormVisible(object sender, RoutedEventArgs e)
         {
-            OptionChoose.Visibility = Visibility.Collapsed;
             AddForm.Visibility = Visibility.Visible;
             ModForm.Visibility = Visibility.Collapsed;
+            Filters.Visibility = Visibility.Collapsed;
         }
 
-        private void ModFormVisible(object sender, RoutedEventArgs e)
+        private void Cancel(object sender, RoutedEventArgs e)
         {
             AddForm.Visibility = Visibility.Collapsed;
-            OptionChoose.Visibility = Visibility.Collapsed;
-            ModForm.Visibility = Visibility.Visible;
-
-            DataTable temp = DBConnection.BasicId("[dbo].[ProcSelectIdZadania]", int.Parse(selectedId));
-
-            MNazwaSource.Text = temp.Rows[0][0].ToString();
-            MUkonczoneSource.IsChecked = (bool)temp.Rows[0][1];
-            MCzasSource.Text = temp.Rows[0][2].ToString();
-            MOpisSource.Text = temp.Rows[0][3].ToString();
-            MPSource.SelectedValue = temp.Rows[0][4];
-            MPROJSource.SelectedValue = temp.Rows[0][5];
+            ModForm.Visibility = Visibility.Collapsed;
+            Filters.Visibility = Visibility.Visible;
         }
+
 
 
 
@@ -145,19 +145,48 @@ namespace SQLProjektV2.Views
 
         private void DeleteRecord(object sender, RoutedEventArgs e)
         {
-            string temp = $"DELETE FROM [dbo].[Zadania] WHERE Id = {selectedId}";
-            try
+            MessageBoxResult result = MessageBox.Show("Czy na pewno chcesz usunąć wpis?", "", MessageBoxButton.YesNo);
+
+            if (result == MessageBoxResult.Yes)
             {
-                DBConnection.SQLCommand(temp);
-                MessageBox.Show("Usunięto zadanie");
-                DataContext = new ZadaniaViewModel();
-                OptionChoose.Visibility = Visibility.Collapsed;
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Nie usunięto zadania, ponieważ jest związane z innymi tablicami");
+                string temp = $"DELETE FROM [dbo].[Zadania] WHERE Id = {selectedId}";
+                try
+                {
+                    DBConnection.SQLCommand(temp);
+                    MessageBox.Show("Usunięto zadanie");
+                    DataContext = new ZadaniaViewModel();
+                    ModForm.Visibility = Visibility.Collapsed;
+                    Filters.Visibility = Visibility.Visible;
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Nie usunięto zadania, ponieważ jest związane z innymi tablicami");
+                }
             }
 
+        }
+
+
+        private void AddFilter(object sender, RoutedEventArgs e)
+        {
+            StackPanel temp = Globals.StackPanel;
+
+            ComboBox tempCB = Globals.ComboBoxColumnChoose;
+            tempCB.ItemsSource = ((ZadaniaViewModel)this.DataContext).FilterInfo;
+            temp.Children.Add(tempCB);
+
+            temp.Children.Add(Globals.ComboBox);
+
+            temp.Children.Add(Globals.Button);
+
+            (temp.Children[0] as ComboBox).SelectedIndex = 0;
+
+            FiltersList.Children.Add(temp);
+        }
+
+        private void UseFilters(object sender, RoutedEventArgs e)
+        {
+            (DataContext as ZadaniaViewModel).MainTable.RowFilter = Globals.GetFilter(FiltersList);
         }
     }
 }

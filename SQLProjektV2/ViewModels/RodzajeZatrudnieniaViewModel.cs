@@ -9,8 +9,8 @@ namespace SQLProjektV2.ViewModels
 {
     class RodzajeZatrudnieniaViewModel : ViewModelBase
     {
-        private DataTable mainTable = DBConnection.Basic($"[dbo].[ProcSelectRodzaje Zatrudnienia]");
-        public DataTable MainTable
+        private DataView mainTable = new DataView(DBConnection.Basic($"[dbo].[ProcSelectRodzaje Zatrudnienia]"));
+        public DataView MainTable
         {
             get => mainTable;
             set
@@ -19,5 +19,12 @@ namespace SQLProjektV2.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public Dictionary<string, string> FilterInfo { get; set; } = new Dictionary<string, string>
+        {
+            {"Nazwa", "String"},
+            {"Min Godzin", "Number"},
+            {"Max Godzin", "Number"},
+        };
     }
 }

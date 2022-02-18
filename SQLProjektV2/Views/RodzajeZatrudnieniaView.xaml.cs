@@ -44,9 +44,15 @@ namespace SQLProjektV2.Views
             if (x != null)
             {
                 selectedId = x.Text;
-                OptionChoose.Visibility = Visibility.Visible;
                 AddForm.Visibility = Visibility.Collapsed;
-                ModForm.Visibility = Visibility.Collapsed;
+                Filters.Visibility = Visibility.Collapsed;
+                ModForm.Visibility = Visibility.Visible;
+
+                DataTable temp = DBConnection.BasicId("[dbo].[ProcSelectIdRodzaje Zatrudnienia]", int.Parse(selectedId));
+
+                MNazwaSource.Text = temp.Rows[0][0].ToString();
+                MMinSource.Text = temp.Rows[0][1].ToString();
+                MMaxSource.Text = temp.Rows[0][2].ToString();
             }
         }
 
@@ -54,6 +60,23 @@ namespace SQLProjektV2.Views
         {
             if (e.PropertyName == "Id")
                 (e.Column as DataGridTextColumn).MaxWidth = 0;
+        }
+
+
+
+
+        private void AddFormVisible(object sender, RoutedEventArgs e)
+        {
+            AddForm.Visibility = Visibility.Visible;
+            ModForm.Visibility = Visibility.Collapsed;
+            Filters.Visibility = Visibility.Collapsed;
+        }
+
+        private void Cancel(object sender, RoutedEventArgs e)
+        {
+            AddForm.Visibility = Visibility.Collapsed;
+            ModForm.Visibility = Visibility.Collapsed;
+            Filters.Visibility = Visibility.Visible;
         }
 
 
@@ -68,7 +91,7 @@ namespace SQLProjektV2.Views
             else if (!int.TryParse(MinSource.Text, out _)) errorString += "Liczba godzin musi być liczbą\n";
             if (MaxSource.Text.Length == 0) errorString += "Podaj maksymalną liczbę godzin\n";
             else if (!int.TryParse(MaxSource.Text, out _)) errorString += "Liczba godzin musi być liczbą\n";
-            if(MinSource.Text.Length > 0 && MaxSource.Text.Length > 0  && int.TryParse(MinSource.Text, out _) && int.TryParse(MaxSource.Text, out _) && int.Parse(MinSource.Text) > int.Parse(MaxSource.Text)) errorString += "Minimalna ilość godzin musi być mniejsza niż maksymalna\n";
+            if (MinSource.Text.Length > 0 && MaxSource.Text.Length > 0 && int.TryParse(MinSource.Text, out _) && int.TryParse(MaxSource.Text, out _) && int.Parse(MinSource.Text) > int.Parse(MaxSource.Text)) errorString += "Minimalna ilość godzin musi być mniejsza niż maksymalna\n";
             if (errorString.Length != 0) MessageBox.Show(errorString);
             else
             {
@@ -82,28 +105,6 @@ namespace SQLProjektV2.Views
                 DBConnection.SQLCommand(temp);
                 DataContext = new RodzajeZatrudnieniaViewModel();
             }
-        }
-
-        private void ModFormVisible(object sender, RoutedEventArgs e)
-        {
-            AddForm.Visibility = Visibility.Collapsed;
-            OptionChoose.Visibility = Visibility.Collapsed;
-            ModForm.Visibility = Visibility.Visible;
-
-            DataTable temp = DBConnection.BasicId("[dbo].[ProcSelectIdRodzaje Zatrudnienia]", int.Parse(selectedId));
-
-            MNazwaSource.Text = temp.Rows[0][0].ToString();
-            MMinSource.Text = temp.Rows[0][1].ToString();
-            MMaxSource.Text = temp.Rows[0][2].ToString();
-        }
-
-
-
-        private void AddFormVisible(object sender, RoutedEventArgs e)
-        {
-            OptionChoose.Visibility = Visibility.Collapsed;
-            AddForm.Visibility = Visibility.Visible;
-            ModForm.Visibility = Visibility.Collapsed;
         }
 
         private void UpdateRecord(object sender, RoutedEventArgs e)
@@ -134,20 +135,48 @@ namespace SQLProjektV2.Views
 
         private void DeleteRecord(object sender, RoutedEventArgs e)
         {
-            string temp = $"DELETE FROM [dbo].[rodzaje_zatrudnienia] WHERE Id = {selectedId}";
-            try
+            MessageBoxResult result = MessageBox.Show("Czy na pewno chcesz usunąć wpis?", "", MessageBoxButton.YesNo);
+
+            if (result == MessageBoxResult.Yes)
             {
-                DBConnection.SQLCommand(temp);
-                MessageBox.Show("Usunięto rodzaj zatrudnienia");
-                DataContext = new RodzajeZatrudnieniaViewModel();
-                OptionChoose.Visibility = Visibility.Collapsed;
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Nie usunięto rodzaju zatrudnienia, ponieważ jest związany z innymi tablicami");
+                string temp = $"DELETE FROM [dbo].[rodzaje_zatrudnienia] WHERE Id = {selectedId}";
+                try
+                {
+                    DBConnection.SQLCommand(temp);
+                    MessageBox.Show("Usunięto rodzaj zatrudnienia");
+                    DataContext = new RodzajeZatrudnieniaViewModel();
+                    ModForm.Visibility = Visibility.Collapsed;
+                    Filters.Visibility = Visibility.Visible;
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Nie usunięto rodzaju zatrudnienia, ponieważ jest związany z innymi tablicami");
+                }
             }
         }
 
+
+        private void AddFilter(object sender, RoutedEventArgs e)
+        {
+            StackPanel temp = Globals.StackPanel;
+
+            ComboBox tempCB = Globals.ComboBoxColumnChoose;
+            tempCB.ItemsSource = ((RodzajeZatrudnieniaViewModel)this.DataContext).FilterInfo;
+            temp.Children.Add(tempCB);
+
+            temp.Children.Add(Globals.ComboBox);
+
+            temp.Children.Add(Globals.Button);
+
+            (temp.Children[0] as ComboBox).SelectedIndex = 0;
+
+            FiltersList.Children.Add(temp);
+        }
+
+        private void UseFilters(object sender, RoutedEventArgs e)
+        {
+            (DataContext as RodzajeZatrudnieniaViewModel).MainTable.RowFilter = Globals.GetFilter(FiltersList);
+        }
 
     }
 }

@@ -29,6 +29,9 @@ namespace SQLProjektV2.Views
             DataContext = new WpisyPracyViewModel();
             DatePicker1.DefaultValue = DateTime.Now;
             DatePicker2.DefaultValue = DateTime.Now;
+            DatePicker1.Value = DateTime.Now;
+            DatePicker2.Value = DateTime.Now;
+
         }
 
         private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -46,9 +49,18 @@ namespace SQLProjektV2.Views
             if (x != null)
             {
                 selectedId = x.Text;
-                OptionChoose.Visibility = Visibility.Visible;
                 AddForm.Visibility = Visibility.Collapsed;
-                ModForm.Visibility = Visibility.Collapsed;
+                Filters.Visibility = Visibility.Collapsed;
+                ModForm.Visibility = Visibility.Visible;
+
+                DataTable temp = DBConnection.BasicId("[dbo].[ProcSelectIdWpisy Pracy]", int.Parse(selectedId));
+
+                MDatePicker1.Value = ((DateTime)temp.Rows[0][0]);
+                MDatePicker2.Value = ((DateTime)temp.Rows[0][1]);
+                MOpisSource.Text = temp.Rows[0][2].ToString();
+                MMSource.SelectedValue = temp.Rows[0][3];
+                MZSource.SelectedValue = temp.Rows[0][4];
+
             }
         }
 
@@ -62,25 +74,16 @@ namespace SQLProjektV2.Views
 
         private void AddFormVisible(object sender, RoutedEventArgs e)
         {
-            OptionChoose.Visibility = Visibility.Collapsed;
             AddForm.Visibility = Visibility.Visible;
             ModForm.Visibility = Visibility.Collapsed;
+            Filters.Visibility = Visibility.Collapsed;
         }
 
-        private void ModFormVisible(object sender, RoutedEventArgs e)
+        private void Cancel(object sender, RoutedEventArgs e)
         {
             AddForm.Visibility = Visibility.Collapsed;
-            OptionChoose.Visibility = Visibility.Collapsed;
-            ModForm.Visibility = Visibility.Visible;
-
-            DataTable temp = DBConnection.BasicId("[dbo].[ProcSelectIdWpisy Pracy]", int.Parse(selectedId));
-
-            MDatePicker1.Value = ((DateTime)temp.Rows[0][0]);
-            MDatePicker2.Value = ((DateTime)temp.Rows[0][1]);
-            MOpisSource.Text = temp.Rows[0][2].ToString();
-            MMSource.SelectedValue = temp.Rows[0][3];
-            MZSource.SelectedValue = temp.Rows[0][4];
-
+            ModForm.Visibility = Visibility.Collapsed;
+            Filters.Visibility = Visibility.Visible;
         }
 
 
@@ -143,19 +146,47 @@ namespace SQLProjektV2.Views
 
         private void DeleteRecord(object sender, RoutedEventArgs e)
         {
-            string temp = $"DELETE FROM [dbo].[Wpisy_Pracy] WHERE Id = {selectedId}";
-            try
-            {
-                DBConnection.SQLCommand(temp);
-                MessageBox.Show("Usunięto wpis pracy");
-                DataContext = new WpisyPracyViewModel();
-                OptionChoose.Visibility = Visibility.Collapsed;
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Nie usunięto wpisu, ponieważ jest związany z innymi tablicami");
-            }
+            MessageBoxResult result = MessageBox.Show("Czy na pewno chcesz usunąć wpis?", "", MessageBoxButton.YesNo);
 
+            if (result == MessageBoxResult.Yes)
+            {
+                string temp = $"DELETE FROM [dbo].[Wpisy_Pracy] WHERE Id = {selectedId}";
+                try
+                {
+                    DBConnection.SQLCommand(temp);
+                    MessageBox.Show("Usunięto wpis pracy");
+                    DataContext = new WpisyPracyViewModel();
+                    ModForm.Visibility = Visibility.Collapsed;
+                    Filters.Visibility = Visibility.Visible;
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Nie usunięto wpisu, ponieważ jest związany z innymi tablicami");
+                }
+            }
+        }
+
+
+        private void AddFilter(object sender, RoutedEventArgs e)
+        {
+            StackPanel temp = Globals.StackPanel;
+
+            ComboBox tempCB = Globals.ComboBoxColumnChoose;
+            tempCB.ItemsSource = ((WpisyPracyViewModel)this.DataContext).FilterInfo;
+            temp.Children.Add(tempCB);
+
+            temp.Children.Add(Globals.ComboBox);
+
+            temp.Children.Add(Globals.Button);
+
+            (temp.Children[0] as ComboBox).SelectedIndex = 0;
+
+            FiltersList.Children.Add(temp);
+        }
+
+        private void UseFilters(object sender, RoutedEventArgs e)
+        {
+            (DataContext as WpisyPracyViewModel).MainTable.RowFilter = Globals.GetFilter(FiltersList);
         }
     }
 }

@@ -4,6 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace SQLProjektV2.ViewModels
 {
@@ -14,6 +16,7 @@ namespace SQLProjektV2.ViewModels
             RZ = DBConnection.GetDict("[dbo].[ProcForeignKeyRodzaje Zatrudnienia]");
             S = DBConnection.GetDict("[dbo].[ProcForeignKeyStanowiska]");
             Z = DBConnection.GetDict("[dbo].[ProcForeignKeyZespoły]");
+
         }
 
         public Dictionary<int, string> RZ { get; set; }
@@ -21,8 +24,8 @@ namespace SQLProjektV2.ViewModels
         public Dictionary<int, string> Z { get; set; }
 
 
-        private DataTable mainTable = DBConnection.Basic("[dbo].[ProcSelectPracownicy]");
-        public DataTable MainTable
+        private DataView mainTable = new DataView( DBConnection.Basic("[dbo].[ProcSelectPracownicy]") );
+        public DataView MainTable
         {
             get => mainTable;
             set
@@ -31,6 +34,20 @@ namespace SQLProjektV2.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public Dictionary<string, string> FilterInfo { get; set; } = new Dictionary<string, string>
+        {
+            {"Imię", "String"},
+            {"Nazwisko", "String"},
+            {"Data Zatrudnienia", "DateShort"},
+            {"Email", "String"},
+            {"Numer Telefonu", "StringNumbers"},
+            {"Data Zwolnienia", "DateShort"},
+            {"Rodzaj Zatrudnienia", "String" },
+            {"Stanowisko", "String" },
+            {"Zespół", "String" }
+        };
+            
     }
 
 

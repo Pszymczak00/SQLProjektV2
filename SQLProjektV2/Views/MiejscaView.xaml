@@ -52,6 +52,16 @@
 
                 <Button Grid.Column="0" Grid.Row="1" Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" Margin="10" FontSize="20" Click="AddFormVisible" >Dodaj nowe miejsce</Button>
 
+                <StackPanel Name="Filters" Margin="10" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Visibility="Visible" >
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="White" Text="Filtry:"></TextBlock>
+                    <StackPanel Name="FiltersList" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Margin="5" Width="200" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" FontSize="20" Click="AddFilter">Dodaj nowy filtr</Button>
+                        <Button Margin="5" Width="200" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" FontSize="20" Click="UseFilters">Zastosuj filtry</Button>
+                    </StackPanel>
+                </StackPanel>
+                
+                
                 <StackPanel Name="AddForm" Margin="10" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed" >
                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="White" Text="Dodawanie miejsca:"></TextBlock>
                     <Grid>
@@ -61,7 +71,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
-                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="200"/>
                         </Grid.RowDefinitions>
                         <StackPanel Margin="5,5,5,4.6" Grid.Column="0">
                             <TextBlock Text="Adres:" Height="30" Margin="5" FontSize="20" HorizontalAlignment="Right" Foreground="White"></TextBlock>
@@ -71,14 +81,11 @@
                             <TextBox Name="AdresSource" Height="30" Width="150" Margin="5" HorizontalAlignment="Left" VerticalContentAlignment="Center" Background="#222222" Foreground="White"></TextBox>
                             <TextBox Name="NumerSource" Height="30" Width="150" Margin="5" HorizontalAlignment="Left" VerticalContentAlignment="Center" Background="#222222" Foreground="White"></TextBox>
                         </StackPanel>
-                        <Button Width="300" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" FontSize="20" Click="AddNewRecord">Dodaj nowe miejsce</Button>
+                        <Button VerticalAlignment="Top" Width="300" Height="60" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" FontSize="20" Click="AddNewRecord">Dodaj nowe miejsce</Button>
+                        <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="200" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" FontSize="20" Click="Cancel">Anuluj</Button>
                     </Grid>
                 </StackPanel>
 
-                <StackPanel Name="OptionChoose" Margin="20" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed">
-                    <Button Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" Margin="10" FontSize="20" Click="ModFormVisible" >Modyfikuj wpis</Button>
-                    <Button Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" Margin="10" FontSize="20" Click="DeleteRecord">Usuń wpis</Button>
-                </StackPanel>
 
                 <StackPanel Name="ModForm" Margin="10" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Visibility="Collapsed" >
                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="White" Text="Modyfikowanie miejsca:"></TextBlock>
@@ -89,7 +96,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
-                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="200"/>
                         </Grid.RowDefinitions>
                         <StackPanel Margin="5,5,5,4.6" Grid.Column="0">
                             <TextBlock Text="Adres:" Height="30" Margin="5" FontSize="20" HorizontalAlignment="Right" Foreground="White"></TextBlock>
@@ -99,7 +106,11 @@
                             <TextBox Name="MAdresSource" Height="30" Width="150" Margin="5" HorizontalAlignment="Left" VerticalContentAlignment="Center" Background="#222222" Foreground="White"></TextBox>
                             <TextBox Name="MNumerSource" Height="30" Width="150" Margin="5" HorizontalAlignment="Left" VerticalContentAlignment="Center" Background="#222222" Foreground="White"></TextBox>
                         </StackPanel>
-                        <Button Width="300" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" FontSize="20" Click="UpdateRecord">Modyfikuj miejsce</Button>
+                        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+                            <Button Margin="5" Height="60" VerticalAlignment="Top" Width="300" Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" FontSize="20" Click="UpdateRecord">Modyfikuj mmiejsce</Button>
+                            <Button Margin="5" Height="60" VerticalAlignment="Top" Width="300" Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" FontSize="20" Click="DeleteRecord">Usuń miejsce</Button>
+                        </StackPanel>
+                        <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="200" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Foreground="White" BorderThickness="2" BorderBrush="White" Background="#404040" FontSize="20" Click="Cancel">Anuluj</Button>
                     </Grid>
                 </StackPanel>
 

@@ -9,8 +9,8 @@ namespace SQLProjektV2.ViewModels
 {
     class StanowiskaViewModel : ViewModelBase
     {
-        private DataTable mainTable = DBConnection.Basic($"[dbo].[ProcSelectStanowiska]");
-        public DataTable MainTable
+        private DataView mainTable = new DataView(DBConnection.Basic($"[dbo].[ProcSelectStanowiska]"));
+        public DataView MainTable
         {
             get => mainTable;
             set
@@ -19,5 +19,13 @@ namespace SQLProjektV2.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public Dictionary<string, string> FilterInfo { get; set; } = new Dictionary<string, string>
+        {
+            {"Nazwa", "String"},
+            {"Wymagany Staż", "Number"},
+            {"Stawka Godzinowa", "Number"},
+
+        };
     }
 }

@@ -16,8 +16,8 @@ namespace SQLProjektV2.ViewModels
 
         public Dictionary<int, string> P { get; set; }
 
-        private DataTable mainTable = DBConnection.Basic("[dbo].[ProcSelectGodziny Pracy]");
-        public DataTable MainTable
+        private DataView mainTable = new DataView(DBConnection.Basic("[dbo].[ProcSelectGodziny Pracy]"));
+        public DataView MainTable
         {
             get => mainTable;
             set
@@ -26,5 +26,13 @@ namespace SQLProjektV2.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public Dictionary<string, string> FilterInfo { get; set; } = new Dictionary<string, string>
+        {
+            {"Pracownik", "String"},
+            {"Kontakt", "String"},
+            {"Miesiąc", "DateMonth"},
+            {"Zadeklarowane Godziny", "Number"},
+        };
     }
 }

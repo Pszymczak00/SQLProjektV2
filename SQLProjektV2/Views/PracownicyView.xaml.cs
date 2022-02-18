@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace SQLProjektV2.Views
 {
@@ -47,9 +48,22 @@ namespace SQLProjektV2.Views
             if (x != null)
             {
                 selectedId = x.Text;
-                OptionChoose.Visibility = Visibility.Visible;
                 AddForm.Visibility = Visibility.Collapsed;
-                ModForm.Visibility = Visibility.Collapsed;
+                ModForm.Visibility = Visibility.Visible;
+                Filters.Visibility = Visibility.Collapsed;
+
+                DataTable temp = DBConnection.BasicId("[dbo].[ProcSelectIdPracownicy]", int.Parse(selectedId));
+
+                MImieSource.Text = temp.Rows[0][0].ToString();
+                MNazwiskoSource.Text = temp.Rows[0][1].ToString();
+                MDatePicker1.SelectedDate = ((DateTime)temp.Rows[0][2]);
+                MEmailSource.Text = temp.Rows[0][3].ToString();
+                MNumerSource.Text = temp.Rows[0][4].ToString();
+                if (temp.Rows[0][5].GetType().ToString() == "System.DateTime")
+                    MDatePicker2.SelectedDate = ((DateTime)temp.Rows[0][5]);
+                MRZSource.SelectedValue = temp.Rows[0][6];
+                MSSource.SelectedValue = temp.Rows[0][7];
+                MZSource.SelectedValue = temp.Rows[0][8];
             }
         }
 
@@ -60,6 +74,23 @@ namespace SQLProjektV2.Views
 
             if (e.PropertyName == "Id")
                 (e.Column as DataGridTextColumn).MaxWidth = 0;
+
+        }
+
+
+
+        private void AddFormVisible(object sender, RoutedEventArgs e)
+        {
+            AddForm.Visibility = Visibility.Visible;
+            ModForm.Visibility = Visibility.Collapsed;
+            Filters.Visibility = Visibility.Collapsed;
+        }
+
+        private void Cancel(object sender, RoutedEventArgs e)
+        {
+            AddForm.Visibility = Visibility.Collapsed;
+            ModForm.Visibility = Visibility.Collapsed;
+            Filters.Visibility = Visibility.Visible;
         }
 
 
@@ -91,6 +122,7 @@ namespace SQLProjektV2.Views
                 DBConnection.SQLCommand(temp);
                 DataContext = new PracownicyViewModel();
             }
+
         }
 
         private void UpdateRecord(object sender, RoutedEventArgs e)
@@ -135,50 +167,52 @@ namespace SQLProjektV2.Views
             }
         }
 
-
-
-        private void AddFormVisible(object sender, RoutedEventArgs e)
-        {
-            AddForm.Visibility = Visibility.Visible;
-            OptionChoose.Visibility = Visibility.Collapsed;
-            ModForm.Visibility = Visibility.Collapsed;
-        }
-
-        private void ModFormVisible(object sender, RoutedEventArgs e)
-        {
-            AddForm.Visibility = Visibility.Collapsed;
-            OptionChoose.Visibility = Visibility.Collapsed;
-            ModForm.Visibility = Visibility.Visible;
-
-            DataTable temp = DBConnection.BasicId("[dbo].[ProcSelectIdPracownicy]", int.Parse(selectedId));
-
-            MImieSource.Text = temp.Rows[0][0].ToString();
-            MNazwiskoSource.Text = temp.Rows[0][1].ToString();
-            MDatePicker1.SelectedDate = ((DateTime)temp.Rows[0][2]);
-            MEmailSource.Text = temp.Rows[0][3].ToString();
-            MNumerSource.Text = temp.Rows[0][4].ToString();
-            if(temp.Rows[0][5].GetType().ToString() == "System.DateTime")
-                MDatePicker2.SelectedDate = ((DateTime)temp.Rows[0][5]);
-            MRZSource.SelectedValue = temp.Rows[0][6];
-            MSSource.SelectedValue = temp.Rows[0][7];
-            MZSource.SelectedValue = temp.Rows[0][8];
-        }
-
         private void DeleteRecord(object sender, RoutedEventArgs e)
         {
-            string temp = $"DELETE FROM [dbo].[pracownicy] WHERE Id_prac = {selectedId}";
-            try
-            {
-                DBConnection.SQLCommand(temp);
-                MessageBox.Show("Usunięto pracownika");
-                DataContext = new PracownicyViewModel();
-                OptionChoose.Visibility = Visibility.Collapsed;
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Nie usunięto pracownika, ponieważ jest związany z innymi tablicami");
-            }
+            MessageBoxResult result = MessageBox.Show("Czy na pewno chcesz usunąć wpis?", "", MessageBoxButton.YesNo);
 
+            if (result == MessageBoxResult.Yes)
+            {
+                string temp = $"DELETE FROM [dbo].[pracownicy] WHERE Id_prac = {selectedId}";
+                try
+                {
+                    DBConnection.SQLCommand(temp);
+                    MessageBox.Show("Usunięto pracownika");
+                    DataContext = new PracownicyViewModel();
+                    ModForm.Visibility = Visibility.Collapsed;
+                    Filters.Visibility = Visibility.Visible;
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Nie usunięto pracownika, ponieważ jest związany z innymi tablicami");
+                }
+            }
         }
+
+
+
+        private void AddFilter(object sender, RoutedEventArgs e)
+        {
+            StackPanel temp = Globals.StackPanel;
+
+            ComboBox tempCB = Globals.ComboBoxColumnChoose;
+            tempCB.ItemsSource = ((PracownicyViewModel)this.DataContext).FilterInfo;
+            temp.Children.Add(tempCB);
+
+            temp.Children.Add(Globals.ComboBox);
+
+            temp.Children.Add(Globals.Button);
+
+            (temp.Children[0] as ComboBox).SelectedIndex = 0;
+
+            FiltersList.Children.Add(temp);
+        }
+
+        private void UseFilters(object sender, RoutedEventArgs e)
+        {
+            (DataContext as PracownicyViewModel).MainTable.RowFilter = Globals.GetFilter(FiltersList);
+        }
+
+
     }
 }
