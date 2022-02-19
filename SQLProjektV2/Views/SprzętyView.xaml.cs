@@ -22,7 +22,8 @@ namespace SQLProjektV2.Views
     /// </summary>
     public partial class SprzętyView : UserControl
     {
-        string selectedId;
+        private string selectedId = "0";
+        private string selectedColumnId = "1";
         public SprzętyView()
         {
             InitializeComponent();
@@ -43,11 +44,21 @@ namespace SQLProjektV2.Views
             }
             if (x != null)
             {
+                DataGridRow row = (DataGridRow)MainTable.ItemContainerGenerator.ContainerFromIndex(int.Parse(selectedColumnId));
+                if (row != null)
+                {
+                    row.BorderBrush = null;
+                    row.BorderThickness = new Thickness(0);
+                }
+
                 selectedId = x.Text;
+                selectedColumnId = index.ToString();
                 AddForm.Visibility = Visibility.Collapsed;
                 Filters.Visibility = Visibility.Collapsed;
                 ModForm.Visibility = Visibility.Visible;
-
+                row = (DataGridRow)MainTable.ItemContainerGenerator.ContainerFromIndex(int.Parse(selectedColumnId));
+                row.BorderBrush = Brushes.White;
+                row.BorderThickness = new Thickness(2);
                 DataTable temp = DBConnection.BasicId("[dbo].[ProcSelectIdSprzęty]", int.Parse(selectedId));
 
                 MTypSource.Text = temp.Rows[0][0].ToString();
@@ -70,6 +81,13 @@ namespace SQLProjektV2.Views
             AddForm.Visibility = Visibility.Visible;
             ModForm.Visibility = Visibility.Collapsed;
             Filters.Visibility = Visibility.Collapsed;
+            DataGridRow row = (DataGridRow)MainTable.ItemContainerGenerator.ContainerFromIndex(int.Parse(selectedColumnId));
+            if (row != null)
+            {
+                row.BorderBrush = null;
+                row.BorderThickness = new Thickness(0);
+            }
+
         }
 
         private void Cancel(object sender, RoutedEventArgs e)
@@ -77,6 +95,13 @@ namespace SQLProjektV2.Views
             AddForm.Visibility = Visibility.Collapsed;
             ModForm.Visibility = Visibility.Collapsed;
             Filters.Visibility = Visibility.Visible;
+            DataGridRow row = (DataGridRow)MainTable.ItemContainerGenerator.ContainerFromIndex(int.Parse(selectedColumnId));
+            if (row != null)
+            {
+                row.BorderBrush = null;
+                row.BorderThickness = new Thickness(0);
+            }
+
         }
 
 
