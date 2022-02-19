@@ -177,18 +177,25 @@ namespace SQLProjektV2.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                string temp = $"DELETE FROM [dbo].[stanowiska] WHERE Id = {selectedId}";
-                try
+                int test = DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Pracownicy] WHERE [Stanowiska_Id] = {selectedId}");
+                if (test > 0)
+                    MessageBox.Show($"Nie można usunąc tego stanowiska, ponieważ {test} pracowników jest na takim stanowisku.");
+
+                else
                 {
-                    DBConnection.SQLCommand(temp);
-                    MessageBox.Show("Usunięto stanowisko");
-                    DataContext = new StanowiskaViewModel();
-                    ModForm.Visibility = Visibility.Collapsed;
-                    Filters.Visibility = Visibility.Visible;
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Nie usunięto stanowiska, ponieważ jest związany z innymi tablicami");
+                    string temp = $"DELETE FROM [dbo].[stanowiska] WHERE Id = {selectedId}";
+                    try
+                    {
+                        DBConnection.SQLCommand(temp);
+                        MessageBox.Show("Usunięto stanowisko");
+                        DataContext = new StanowiskaViewModel();
+                        ModForm.Visibility = Visibility.Collapsed;
+                        Filters.Visibility = Visibility.Visible;
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Nie usunięto stanowiska, ponieważ jest związany z innymi tablicami");
+                    }
                 }
             }
         }

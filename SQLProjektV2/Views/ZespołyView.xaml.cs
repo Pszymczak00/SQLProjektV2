@@ -166,19 +166,31 @@ namespace SQLProjektV2.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                string temp = $"DELETE FROM [dbo].[zespoły] WHERE Id = {selectedId}";
-                try
+                string output = "";
+                int test = DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Pracownicy] WHERE [Zespoły_Id] = {selectedId}");
+                if (test > 0)
+                    output += $"Nie można usunąc tego zespołu, ponieważ jest w nim {test} pracowników.\n";
+                int test2 = DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Projekty] WHERE [ZespoLy_id] = {selectedId}");
+                if (test2 > 0)
+                    output += $"Nie można usunąc tego zespołu, ponieważ ma przypisane {test} projektów.";
+
+                if (test == 0 && test2 == 0)
                 {
-                    DBConnection.SQLCommand(temp);
-                    MessageBox.Show("Usunięto zespół");
-                    DataContext = new ZespołyViewModel();
-                    ModForm.Visibility = Visibility.Collapsed;
-                    Filters.Visibility = Visibility.Visible;
+                    string temp = $"DELETE FROM [dbo].[zespoły] WHERE Id = {selectedId}";
+                    try
+                    {
+                        DBConnection.SQLCommand(temp);
+                        MessageBox.Show("Usunięto zespół");
+                        DataContext = new ZespołyViewModel();
+                        ModForm.Visibility = Visibility.Collapsed;
+                        Filters.Visibility = Visibility.Visible;
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Nie usunięto zespołu, ponieważ jest związany z innymi tablicami");
+                    }
                 }
-                catch (Exception)
-                {
-                    MessageBox.Show("Nie usunięto zespołu, ponieważ jest związany z innymi tablicami");
-                }
+                else MessageBox.Show(output);
             }
 
         }

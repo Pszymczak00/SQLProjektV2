@@ -197,19 +197,32 @@ namespace SQLProjektV2.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                string temp = $"DELETE FROM [dbo].[pracownicy] WHERE Id_prac = {selectedId}";
-                try
+                string output = "";
+                int test = DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Sprzęty] WHERE [Pracownicy_Id_prac] = {selectedId}");
+                if (test > 0)
+                    output += $"Nie można usunąc tego pracownika, ponieważ jest do niego przypisanych {test} sprzętów.\n";
+                int test2 = DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Zadania] WHERE [Pracownicy_Id_prac] = {selectedId}");
+                if(test2 > 0)
+                    output += $"Nie można usunąc tego pracownika, ponieważ jest do niego przypisanych {test} zadań.";
+
+                if (test == 0 && test2 == 0)
                 {
-                    DBConnection.SQLCommand(temp);
-                    MessageBox.Show("Usunięto pracownika");
-                    DataContext = new PracownicyViewModel();
-                    ModForm.Visibility = Visibility.Collapsed;
-                    Filters.Visibility = Visibility.Visible;
+                    string temp = $"DELETE FROM [dbo].[pracownicy] WHERE Id_prac = {selectedId}";
+                    try
+                    {
+                        DBConnection.SQLCommand(temp);
+                        MessageBox.Show("Usunięto pracownika");
+                        DataContext = new PracownicyViewModel();
+                        ModForm.Visibility = Visibility.Collapsed;
+                        Filters.Visibility = Visibility.Visible;
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Nie usunięto pracownika, ponieważ jest związany z innymi tablicami");
+                    }
                 }
-                catch (Exception)
-                {
-                    MessageBox.Show("Nie usunięto pracownika, ponieważ jest związany z innymi tablicami");
-                }
+                else MessageBox.Show(output);
+
             }
         }
 

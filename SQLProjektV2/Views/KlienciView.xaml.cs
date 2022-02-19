@@ -171,18 +171,25 @@ namespace SQLProjektV2.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                string temp = $"DELETE FROM [dbo].[Klienci] WHERE Id = {selectedId}";
-                try
+                int test = DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Projekty] WHERE [Klienci_Id] = {selectedId}");
+                if (test > 0)
+                    MessageBox.Show($"Nie można usunąc tego klienta, ponieważ odpowiada za {test} projektów.");
+
+                else
                 {
-                    DBConnection.SQLCommand(temp);
-                    MessageBox.Show("Usunięto klienta");
-                    DataContext = new KlienciViewModel();
-                    ModForm.Visibility = Visibility.Collapsed;
-                    Filters.Visibility = Visibility.Visible;
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Nie usunięto klienta, ponieważ jest związany z innymi tablicami");
+                    string temp = $"DELETE FROM [dbo].[Klienci] WHERE Id = {selectedId}";
+                    try
+                    {
+                        DBConnection.SQLCommand(temp);
+                        MessageBox.Show("Usunięto klienta");
+                        DataContext = new KlienciViewModel();
+                        ModForm.Visibility = Visibility.Collapsed;
+                        Filters.Visibility = Visibility.Visible;
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Nie usunięto klienta, ponieważ jest związany z innymi tablicami");
+                    }
                 }
             }
 

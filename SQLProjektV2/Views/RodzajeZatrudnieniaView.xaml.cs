@@ -164,18 +164,25 @@ namespace SQLProjektV2.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                string temp = $"DELETE FROM [dbo].[rodzaje_zatrudnienia] WHERE Id = {selectedId}";
-                try
+                int test = DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Pracownicy] WHERE [Rodzaje_zatrudnienia_Id] = {selectedId}");
+                if (test > 0)
+                    MessageBox.Show($"Nie można usunąc tego rodzaju zatrudnienia, ponieważ {test} pracowników pracuje na takiej umowie.");
+
+                else
                 {
-                    DBConnection.SQLCommand(temp);
-                    MessageBox.Show("Usunięto rodzaj zatrudnienia");
-                    DataContext = new RodzajeZatrudnieniaViewModel();
-                    ModForm.Visibility = Visibility.Collapsed;
-                    Filters.Visibility = Visibility.Visible;
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Nie usunięto rodzaju zatrudnienia, ponieważ jest związany z innymi tablicami");
+                    string temp = $"DELETE FROM [dbo].[rodzaje_zatrudnienia] WHERE Id = {selectedId}";
+                    try
+                    {
+                        DBConnection.SQLCommand(temp);
+                        MessageBox.Show("Usunięto rodzaj zatrudnienia");
+                        DataContext = new RodzajeZatrudnieniaViewModel();
+                        ModForm.Visibility = Visibility.Collapsed;
+                        Filters.Visibility = Visibility.Visible;
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Nie usunięto rodzaju zatrudnienia, ponieważ jest związany z innymi tablicami");
+                    }
                 }
             }
         }

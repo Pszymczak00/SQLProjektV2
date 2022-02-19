@@ -202,18 +202,26 @@ namespace SQLProjektV2.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                string temp = $"DELETE FROM [dbo].[Miejsca] WHERE Id = {selectedId}";
-                try
+                int test = DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Wpisy_pracy] WHERE [Miejsca_id] = {selectedId}");
+                if (test > 0)
+                    MessageBox.Show($"Nie można usunąc tego miejsca, ponieważ jest przypisane do {test} wpisów pracy.");
+
+                else
                 {
-                    DBConnection.SQLCommand(temp);
-                    MessageBox.Show("Usunięto miejsce");
-                    DataContext = new MiejscaViewModel();
-                    ModForm.Visibility = Visibility.Collapsed;
-                    Filters.Visibility = Visibility.Visible;
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Nie usunięto miejsca, ponieważ jest związane z innymi tablicami");
+
+                    string temp = $"DELETE FROM [dbo].[Miejsca] WHERE Id = {selectedId}";
+                    try
+                    {
+                        DBConnection.SQLCommand(temp);
+                        MessageBox.Show("Usunięto miejsce");
+                        DataContext = new MiejscaViewModel();
+                        ModForm.Visibility = Visibility.Collapsed;
+                        Filters.Visibility = Visibility.Visible;
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Nie usunięto miejsca, ponieważ jest związane z innymi tablicami");
+                    }
                 }
             }
         }

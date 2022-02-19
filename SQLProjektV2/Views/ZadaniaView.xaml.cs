@@ -174,18 +174,25 @@ namespace SQLProjektV2.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                string temp = $"DELETE FROM [dbo].[Zadania] WHERE Id = {selectedId}";
-                try
+                int test = DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Wpisy_pracy] WHERE [Zadania_id] = {selectedId}");
+                if (test > 0)
+                    MessageBox.Show($"Nie można usunąc tego zadania, ponieważ ma przypisane {test} wpisów pracy.");
+
+                else
                 {
-                    DBConnection.SQLCommand(temp);
-                    MessageBox.Show("Usunięto zadanie");
-                    DataContext = new ZadaniaViewModel();
-                    ModForm.Visibility = Visibility.Collapsed;
-                    Filters.Visibility = Visibility.Visible;
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Nie usunięto zadania, ponieważ jest związane z innymi tablicami");
+                    string temp = $"DELETE FROM [dbo].[Zadania] WHERE Id = {selectedId}";
+                    try
+                    {
+                        DBConnection.SQLCommand(temp);
+                        MessageBox.Show("Usunięto zadanie");
+                        DataContext = new ZadaniaViewModel();
+                        ModForm.Visibility = Visibility.Collapsed;
+                        Filters.Visibility = Visibility.Visible;
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Nie usunięto zadania, ponieważ jest związane z innymi tablicami");
+                    }
                 }
             }
 

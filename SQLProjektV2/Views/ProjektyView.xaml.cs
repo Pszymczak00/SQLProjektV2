@@ -162,18 +162,25 @@ namespace SQLProjektV2.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                string temp = $"DELETE FROM [dbo].[Projekty] WHERE Id = {selectedId}";
-                try
+                int test = DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Zadania] WHERE [Projekty_Id] = {selectedId}");
+                if (test > 0)
+                    MessageBox.Show($"Nie można usunąc tego projektu, jest do niego przypisane {test} zadań.");
+
+                else
                 {
-                    DBConnection.SQLCommand(temp);
-                    MessageBox.Show("Usunięto projekt");
-                    DataContext = new ProjektyViewModel();
-                    ModForm.Visibility = Visibility.Collapsed;
-                    Filters.Visibility = Visibility.Visible;
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Nie usunięto projektu, ponieważ jest związany z innymi tablicami");
+                    string temp = $"DELETE FROM [dbo].[Projekty] WHERE Id = {selectedId}";
+                    try
+                    {
+                        DBConnection.SQLCommand(temp);
+                        MessageBox.Show("Usunięto projekt");
+                        DataContext = new ProjektyViewModel();
+                        ModForm.Visibility = Visibility.Collapsed;
+                        Filters.Visibility = Visibility.Visible;
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Nie usunięto projektu, ponieważ jest związany z innymi tablicami");
+                    }
                 }
             }
         }
