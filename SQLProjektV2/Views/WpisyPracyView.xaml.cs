@@ -118,8 +118,6 @@ namespace SQLProjektV2.Views
             string errorString = "";
             string start = DatePicker1.Value.Value.ToString("yyyy-MM-dd HH:mm:ss");
             string stop = DatePicker2.Value.Value.ToString("yyyy-MM-dd HH:mm:ss");
-
-            if (DatePicker1.Value != null) MessageBox.Show(DatePicker1.Value.Value.ToString("yyyy-MM-dd HH:mm:ss"));
              
             if(DatePicker1.Value.Value > DatePicker2.Value.Value) errorString += "Czas rozpoczęcia wpisu nie może być poźniejszy od czasu zakończenia wpisu\n";
 
@@ -147,8 +145,6 @@ namespace SQLProjektV2.Views
             string errorString = "";
             string start = MDatePicker1.Value.Value.ToString("yyyy-MM-dd HH:mm:ss");
             string stop = MDatePicker2.Value.Value.ToString("yyyy-MM-dd HH:mm:ss");
-
-            if (MDatePicker1.Value != null) MessageBox.Show(MDatePicker1.Value.Value.ToString("yyyy-MM-dd HH:mm:ss"));
 
             if (MDatePicker1.Value.Value > MDatePicker2.Value.Value) errorString += "Czas rozpoczęcia wpisu nie może być poźniejszy od czasu zakończenia wpisu\n";
 

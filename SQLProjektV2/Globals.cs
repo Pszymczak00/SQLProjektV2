@@ -210,7 +210,6 @@ namespace SQLProjektV2
             {
                 string oper = ((ComboBox)el.Children[1]).SelectedItem.ToString();
 
-                MessageBox.Show(oper);
                 switch (oper)
                 {
                     case "Równe (=)":
@@ -324,7 +323,6 @@ namespace SQLProjektV2
 
             if (output.Length > 0)
             {
-                MessageBox.Show(output.Substring(0, output.Length - 4));
                 return output.Substring(0, output.Length - 4);
             }
             else return "";
