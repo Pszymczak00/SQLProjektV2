@@ -146,7 +146,8 @@ namespace SQLProjektV2
                     Height = 30,
                     Width = 200,
                     Margin = new Thickness(5),
-                    DefaultValue = DateTime.Now
+                    DefaultValue = DateTime.Now,
+                    Value = DateTime.Now
                 };
             }
         }
@@ -212,7 +213,7 @@ namespace SQLProjektV2
                 if (columnType == "String")
                 {
                     string oper = ((ComboBox)el.Children[1]).SelectedItem.ToString();
-                    string text = ((TextBox)el.Children[2]).Text;
+                    string text = ((TextBox)el.Children[2]).Text;  
                     if (oper == "Zawiera")
                     {
                         oper = "LIKE";
@@ -224,7 +225,7 @@ namespace SQLProjektV2
                         text = "*" + text + "*";
                     }
 
-                    output += "[" + columnName + "]" + " " + oper + " '" + text + "'";
+                    output += $"Isnull([{columnName}], '')" + " " + oper + " '" + text + "'";
                 }
 
                 if (columnType == "StringNumbers")
@@ -242,15 +243,16 @@ namespace SQLProjektV2
                         text = "*" + text + "*";
                     }
 
-                    output += "[" + columnName + "]" + " " + oper + " '" + text + "'";
+                    output += $"Isnull([{columnName}], '')" + " " + oper + " '" + text + "'";
                 }
 
                 if (columnType == "Number")
                 {
                     string oper = ((ComboBox)el.Children[1]).SelectedItem.ToString();
                     string text = ((TextBox)el.Children[2]).Text;
-
-                    output += "[" + columnName + "]" + " " + oper + " " + text ;
+                    if(text.Length > 0)
+                        output += "[" + columnName + "]" + " " + oper + " " + text ;
+                    else output += "[" + columnName + "] IS NULL";
                 }
 
                 if (columnType == "DateShort")
@@ -260,9 +262,9 @@ namespace SQLProjektV2
                     {
                         string text = ((DatePicker)el.Children[2]).SelectedDate.Value.ToString("MM-dd-yyyy");
 
-                        output += "[" + columnName + "]" + " " + oper + " #" + text + "#";
+                        output += $"Isnull([{columnName}], '')" + " " + oper + " #" + text + "#";
                     }
-                    else continue;
+                    else output += $"Isnull([{columnName}], '') = ''";
 
                 }
 
@@ -289,11 +291,11 @@ namespace SQLProjektV2
                     string oper = ((ComboBox)el.Children[1]).SelectedItem.ToString();
                     if (oper == "Prawda")
                     {
-                        output += columnName + " = 1";
+                        output += "[" + columnName + "]" + " = 1";
                     }
                     else if (oper == "Fałsz")
                     {
-                        output += columnName + " = 0";
+                        output += "[" + columnName + "]" + " = 0";
                     }
                     
                 }
