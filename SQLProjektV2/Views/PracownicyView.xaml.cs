@@ -203,9 +203,12 @@ namespace SQLProjektV2.Views
                     output += $"Nie można usunąc tego pracownika, ponieważ jest do niego przypisanych {test} sprzętów.\n";
                 int test2 = DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Zadania] WHERE [Pracownicy_Id_prac] = {selectedId}");
                 if(test2 > 0)
-                    output += $"Nie można usunąc tego pracownika, ponieważ jest do niego przypisanych {test} zadań.";
+                    output += $"Nie można usunąc tego pracownika, ponieważ jest do niego przypisanych {test2} zadań.";
+                int test3 = DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Godziny_pracy] WHERE [Zadeklarowane_godziny] = {selectedId}");
+                if (test3 > 0)
+                    output += $"Nie można usunąc tego pracownika, ponieważ ma on {test3} deklaracji godzin pracy.";
 
-                if (test == 0 && test2 == 0)
+                if (test == 0 && test2 == 0 && test3 == 0)
                 {
                     string temp = $"DELETE FROM [dbo].[pracownicy] WHERE Id_prac = {selectedId}";
                     try

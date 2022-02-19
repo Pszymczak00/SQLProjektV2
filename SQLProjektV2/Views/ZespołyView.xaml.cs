@@ -172,7 +172,7 @@ namespace SQLProjektV2.Views
                     output += $"Nie można usunąc tego zespołu, ponieważ jest w nim {test} pracowników.\n";
                 int test2 = DBConnection.SQLCommandRet($"SELECT COUNT(*) FROM [dbo].[Projekty] WHERE [ZespoLy_id] = {selectedId}");
                 if (test2 > 0)
-                    output += $"Nie można usunąc tego zespołu, ponieważ ma przypisane {test} projektów.";
+                    output += $"Nie można usunąc tego zespołu, ponieważ ma przypisane {test2} projektów.";
 
                 if (test == 0 && test2 == 0)
                 {
