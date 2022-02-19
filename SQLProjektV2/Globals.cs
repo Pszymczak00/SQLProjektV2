@@ -14,9 +14,9 @@ namespace SQLProjektV2
     public static class Globals
     {
 
-        public static List<string> OperatorsString { get; set; } = new List<string>() { "=", "<>", "<", "<=", ">", ">=", "Zawiera", "Nie zawiera" };
+        public static List<string> OperatorsString { get; set; } = new List<string>() { "Równe (=)", "Różne (!=)", "Mniejsze (<)", "Mniejsze lub równe (<=)", "Większe (>)", "Większe lub równe (>=)", "Zawiera", "Nie zawiera" };
 
-        public static List<string> OperatorsDateNumber { get; set; } = new List<string>() { "=", "<>", "<", "<=", ">", ">=" };
+        public static List<string> OperatorsDateNumber { get; set; } = new List<string>() { "Równe (=)", "Różne (!=)", "Mniejsze (<)", "Mniejsze lub równe (<=)", "Większe (>)", "Większe lub równe (>=)" };
 
 
         public static List<string> OperatorsBoolean { get; set; } = new List<string>() { "Prawda", "Fałsz" };
@@ -169,8 +169,7 @@ namespace SQLProjektV2
         private static void OnMyComboBoxChanged(object sender, SelectionChangedEventArgs e)
         {
             string temp = ((KeyValuePair<string, string>)(sender as ComboBox).SelectedItem).Value;
-
-
+            
 
             if(temp == "String" || temp == "StringNumbers")
                 ((ComboBox)((StackPanel)((ComboBox)sender).Parent).Children[1]).ItemsSource = Globals.OperatorsString;
@@ -206,13 +205,40 @@ namespace SQLProjektV2
         {
             string output = "";
 
+
             foreach (StackPanel el in filterList.Children)
             {
+                string oper = ((ComboBox)el.Children[1]).SelectedItem.ToString();
+
+                MessageBox.Show(oper);
+                switch (oper)
+                {
+                    case "Równe (=)":
+                        oper = "=";
+                        break;
+                    case "Różne (!=)":
+                        oper = "<>";
+                        break;
+                    case "Mniejsze (<)":
+                        oper = "<";
+                        break;
+                    case "Mniejsze lub równe (<=)":
+                        oper = "<=";
+                        break;
+                    case "Większe (>)":
+                        oper = ">";
+                        break;
+                    case "Większe lub równe (>=)":
+                        oper = ">=";
+                        break;
+                    default:
+                        break;
+                }
+
                 string columnName = ((KeyValuePair<string, string>)((ComboBox)el.Children[0]).SelectedItem).Key;
                 string columnType = ((KeyValuePair<string, string>)((ComboBox)el.Children[0]).SelectedItem).Value;
                 if (columnType == "String")
                 {
-                    string oper = ((ComboBox)el.Children[1]).SelectedItem.ToString();
                     string text = ((TextBox)el.Children[2]).Text;  
                     if (oper == "Zawiera")
                     {
@@ -230,7 +256,6 @@ namespace SQLProjektV2
 
                 if (columnType == "StringNumbers")
                 {
-                    string oper = ((ComboBox)el.Children[1]).SelectedItem.ToString();
                     string text = ((TextBox)el.Children[2]).Text;
                     if (oper == "Zawiera")
                     {
@@ -248,7 +273,6 @@ namespace SQLProjektV2
 
                 if (columnType == "Number")
                 {
-                    string oper = ((ComboBox)el.Children[1]).SelectedItem.ToString();
                     string text = ((TextBox)el.Children[2]).Text;
                     if(text.Length > 0)
                         output += "[" + columnName + "]" + " " + oper + " " + text ;
@@ -257,7 +281,6 @@ namespace SQLProjektV2
 
                 if (columnType == "DateShort")
                 {
-                    string oper = ((ComboBox)el.Children[1]).SelectedItem.ToString();
                     if (((DatePicker)el.Children[2]).SelectedDate != null)
                     {
                         string text = ((DatePicker)el.Children[2]).SelectedDate.Value.ToString("MM-dd-yyyy");
@@ -270,7 +293,6 @@ namespace SQLProjektV2
 
                 if (columnType == "DateMonth")
                 {
-                    string oper = ((ComboBox)el.Children[1]).SelectedItem.ToString();
                     string year = ((DatePicker)el.Children[2]).SelectedDate.Value.Year.ToString();
                     string month = ((DatePicker)el.Children[2]).SelectedDate.Value.Month.ToString();
                     string text = $"{year}-{month}-01";
@@ -280,7 +302,6 @@ namespace SQLProjektV2
 
                 if (columnType == "DateLong")
                 {
-                    string oper = ((ComboBox)el.Children[1]).SelectedItem.ToString();
                     string text = ((Xceed.Wpf.Toolkit.DateTimeUpDown)el.Children[2]).Value.Value.ToString("yyyy-MM-dd HH:mm:ss");
 
                     output += "[" + columnName + "]" + " " + oper + " #" + text + "#";
@@ -288,7 +309,6 @@ namespace SQLProjektV2
 
                 if (columnType == "Boolean")
                 {
-                    string oper = ((ComboBox)el.Children[1]).SelectedItem.ToString();
                     if (oper == "Prawda")
                     {
                         output += "[" + columnName + "]" + " = 1";
